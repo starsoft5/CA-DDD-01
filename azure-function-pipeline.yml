@@ -1,0 +1,34 @@
+trigger:
+  paths:
+    include:
+      - AzureFunctionApp/**
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  azureFunctionAppName: 'my-function-app'
+  azureResourceGroup: 'my-rg'
+  serviceConnection: 'AzureConnection'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '9.0.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Function App'
+  inputs:
+    command: 'build'
+    projects: 'AzureFunctionApp/*.csproj'
+
+- task: AzureFunctionApp@2
+  displayName: 'Deploy to Azure Function'
+  inputs:
+    azureSubscription: $(serviceConnection)
+    appType: 'functionApp'
+    appName: $(azureFunctionAppName)
+    resourceGroupName: $(azureResourceGroup)
+    package: '$(System.DefaultWorkingDirectory)/AzureFunctionApp/bin/Release/net9.0/publish'

@@ -6,6 +6,6 @@ import { useEffect, useState } from 'react';
        Hello World !!!
     </h1>
       
-};
+);
 
 export default OrderList;

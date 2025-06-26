@@ -44,7 +44,7 @@ public class GetOrderByIdFunction
             return new BadRequestObjectResult("Invalid 'id' query parameter.");
         }
 
-        var cacheKey = "order_by_id";
+        var cacheKey = idStr;
         var cached = await _cache.GetStringAsync(cacheKey);
         if (!string.IsNullOrEmpty(cached))
         {

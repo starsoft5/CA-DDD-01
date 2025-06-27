@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-
-function OrderList() {
+ function OrderList() {
   return (
     <h1>
       Hello World !!!????.....77777

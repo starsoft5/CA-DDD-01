@@ -6,7 +6,9 @@ name: Build and deploy Node.js app to Azure Web App - my-react-vite-app
 on:
   push:
     branches:
-      - ReactApp/**
+      - main
+    paths:
+      - 'ReactApp/**'  
   workflow_dispatch:
 
 jobs:

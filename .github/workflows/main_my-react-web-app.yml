@@ -14,6 +14,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReactApp
     permissions:
       contents: read #This is required for actions/checkout
 

@@ -1,64 +1,48 @@
-name: Build and Deploy ReactApp
+name: CI/CD for React Vite App (OIDC Secure)
+
+permissions:
+  id-token: write
+  contents: read
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'ReactApp/**'
-  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
+
+    defaults:
+      run:
+        working-directory: ReactApp
+
     steps:
-      - name: 📝 Display message
-        run: echo "✅ Deployment step started"
-    
-      - name: ✅ Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔍 Confirm folder structure
-        run: |
-          echo "Current path: $(pwd)"
-          echo "Root files:"
-          ls -la
-          echo "ReactApp files:"
-          ls -la ReactApp
-
-      - name: 📦 Install dependencies in ReactApp
-        run: |
-          cd ReactApp
-          echo "Now in: $(pwd)"
-          ls -la
-          npm install
-
-      - name: 🛠️ Build ReactApp
-        run: |
-          cd ReactApp
-          npm run build
-
-      - name: 📤 Upload dist folder
-        uses: actions/upload-artifact@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          name: react-build
-          path: ReactApp/dist
+          node-version: '18.x'
 
-  deploy:
-    runs-on: ubuntu-latest
-     
-    needs: build
+      - name: Install dependencies
+        run: npm ci
 
-    steps:
-      - name: 📥 Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Build Vite app
+        run: npm run build
+
+      - name: Log in to Azure using OIDC
+        uses: azure/login@v2
         with:
-          name: react-build
+          client-id: '0c1429f6-121a-446b-8b79-2df0d5f9ea37'
+          tenant-id: 'ec0fe4e8-e175-49eb-a90c-b2c2887d8ef5'
+          subscription-id: '6215500a-a358-4c19-a3cb-73d281339cc1'
 
-      
-
-      - name: 🚀 Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'my-react-web-app'
-          package: ./dist
+          app-name: my-react-web-app
+          package: ReactApp/dist

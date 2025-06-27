@@ -1,11 +1,9 @@
-name: Build and Deploy ReactApp to Azure
+name: Debug Build ReactApp
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'ReactApp/**'
+    branches: [ main ]
+    paths: [ 'ReactApp/**' ]
   workflow_dispatch:
 
 jobs:
@@ -13,55 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Show folder structure (debug)
+      - name: Show current directory structure
         run: |
           pwd
-          echo "Root files:"
           ls -la
-          echo "ReactApp files:"
           ls -la ReactApp
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ReactApp
-
-      - name: Build the app
-        run: npm run build
-        working-directory: ReactApp
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: react-build
-          path: ReactApp/dist
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: react-build
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'my-react-web-app' # ← Replace with your App Service name
-          package: ./dist
+      - name: Install dependencies (force correct path)
+        run: |
+          cd ReactApp
+          pwd
+          ls -la
+          npm install

@@ -21,13 +21,15 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install and build React app
+      - name: Install dependencies
+        run: npm ci
         working-directory: ReactApp
-        run: |
-          npm ci
-          npm run build
 
-      - name: Upload build artifact
+      - name: Build app
+        run: npm run build
+        working-directory: ReactApp
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: react-build
@@ -38,7 +40,7 @@ jobs:
     needs: build
 
     steps:
-      - name: Download build artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: react-build

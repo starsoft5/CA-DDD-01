@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write       # ✅ Required for OIDC login with azure/login@v2
+      contents: read        # Optional, but often needed for checkout
 
     steps:
       - name: 📝 Display message

@@ -1,4 +1,4 @@
-name: Build and Deploy ReactApp to Azure Web App
+name: Build and Deploy ReactApp
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
       - name: 🧰 Set up Node.js
@@ -23,24 +23,24 @@ jobs:
 
       - name: 📦 Install dependencies
         run: npm ci
-        working-directory: ./CA-DDD-01/ReactApp
+        working-directory: ReactApp
 
       - name: 🛠️ Build the app
         run: npm run build
-        working-directory: ./CA-DDD-01/ReactApp
+        working-directory: ReactApp
 
-      - name: 📤 Upload production build
+      - name: 📤 Upload dist build
         uses: actions/upload-artifact@v4
         with:
           name: react-build
-          path: CA-DDD-01/ReactApp/dist
+          path: ReactApp/dist
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: 📥 Download build artifact
+      - name: 📥 Download dist
         uses: actions/download-artifact@v4
         with:
           name: react-build
@@ -55,5 +55,5 @@ jobs:
       - name: 🚀 Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'my-react-web-app' # Replace with your actual App Service name
+          app-name: 'my-react-web-app'  # Replace this with your actual App Service name
           package: ./dist

@@ -1,26 +1,68 @@
-name: Debug and Deploy ReactApp
+name: Build and Deploy ReactApp
 
 on:
   push:
-    branches: [ main ]
-    paths: [ 'ReactApp/**' ]
+    branches:
+      - main
+    paths:
+      - 'ReactApp/**'
+  workflow_dispatch:
 
 jobs:
-  debug-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Print runner directory info
+      - name: 🕵️ Show folder structure (debug)
         run: |
-          echo "Work directory: $(pwd)"
-          echo "Top-level files:"
+          echo "== Root directory =="
+          pwd
+          echo "== Files in root =="
           ls -la
-          echo "ReactApp contents:"
+          echo "== Files in ReactApp =="
           ls -la ReactApp
 
-      - name: Install dependencies
-        run: npm ci
+      - name: 🧰 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: 📦 Install dependencies in ReactApp
+        run: npm install
         working-directory: ReactApp
+
+      - name: 🛠️ Build the app
+        run: npm run build
+        working-directory: ReactApp
+
+      - name: 📤 Upload built files
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-build
+          path: ReactApp/dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: 📥 Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+
+      - name: 🔐 Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 🚀 Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'my-react-web-app'  # Replace with your App Service name
+          package: ./dist

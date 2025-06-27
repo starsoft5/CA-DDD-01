@@ -15,28 +15,22 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🧪 Debug: Show current directory and ReactApp content
+      - name: 🔍 Confirm repo structure
         run: |
-          echo "Working directory:"
-          pwd
-          echo "Top-level files:"
+          echo "Working dir: $(pwd)"
           ls -la
-          echo "ReactApp folder contents:"
+          echo "Contents of ReactApp:"
           ls -la ReactApp
 
-      - name: 📦 Install dependencies inside ReactApp
-        run: |
-          cd ReactApp
-          echo "Inside $(pwd)"
-          ls -la
-          npm install
+      - name: 📦 Install dependencies
+        working-directory: ./ReactApp
+        run: npm install
 
-      - name: 🛠️ Build the app
-        run: |
-          cd ReactApp
-          npm run build
+      - name: 🛠️ Build app
+        working-directory: ./ReactApp
+        run: npm run build
 
-      - name: 📤 Upload built files
+      - name: 📤 Upload dist folder
         uses: actions/upload-artifact@v4
         with:
           name: react-build
@@ -47,7 +41,7 @@ jobs:
     needs: build
 
     steps:
-      - name: 📥 Download build artifact
+      - name: 📥 Download build
         uses: actions/download-artifact@v4
         with:
           name: react-build
@@ -62,5 +56,5 @@ jobs:
       - name: 🚀 Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'my-react-web-app' # Replace this with your App Service name
+          app-name: 'my-react-web-app' # Change this to match your App Service
           package: ./dist

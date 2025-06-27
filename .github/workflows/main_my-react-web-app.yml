@@ -1,59 +1,26 @@
-name: Build and Deploy ReactApp
+name: Debug and Deploy ReactApp
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'ReactApp/**'
-  workflow_dispatch:
+    branches: [ main ]
+    paths: [ 'ReactApp/**' ]
 
 jobs:
-  build:
+  debug-build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🧰 Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+      - name: Print runner directory info
+        run: |
+          echo "Work directory: $(pwd)"
+          echo "Top-level files:"
+          ls -la
+          echo "ReactApp contents:"
+          ls -la ReactApp
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: npm ci
         working-directory: ReactApp
-
-      - name: 🛠️ Build the app
-        run: npm run build
-        working-directory: ReactApp
-
-      - name: 📤 Upload dist build
-        uses: actions/upload-artifact@v4
-        with:
-          name: react-build
-          path: ReactApp/dist
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: 📥 Download dist
-        uses: actions/download-artifact@v4
-        with:
-          name: react-build
-
-      - name: 🔐 Azure Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 🚀 Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'my-react-web-app'  # Replace this with your actual App Service name
-          package: ./dist

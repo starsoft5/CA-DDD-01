@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/6215500a-a358-4c19-a3cb-73d281339cc1/resourceGroups/my-rg1/providers/Microsoft.Web/sites/my-react-web-app",
+    "appService.deploySubpath": "dist"
+}

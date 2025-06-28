@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main  # or your deploy branch
+    paths:
+      - 'ReactApp/**'  
 
 jobs:
   build-and-deploy:
+    if: github.actor != 'github-actions'
     runs-on: ubuntu-latest
 
     steps:

@@ -3,7 +3,7 @@ name: Deploy React Vite App to Azure
 on:
   push:
     branches:
-      - main
+      - main  # or your deploy branch
 
 jobs:
   build-and-deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build the Vite app
+      - name: Build Vite app
         run: npm run build
 
       - name: Deploy to Azure Web App

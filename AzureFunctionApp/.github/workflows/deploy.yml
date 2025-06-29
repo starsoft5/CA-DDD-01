@@ -1,4 +1,4 @@
-﻿name: Build and Deploy Azure Function (.NET)
+﻿name: Build and Deploy .NET Azure Function App
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_NAME: azurefunctionappconvey
-  AZURE_RESOURCE_GROUP: my-rg
+  AZURE_RESOURCE_GROUP: convey-rg
   AZURE_REGION: eastus
   AZURE_STORAGE_ACCOUNT: mystorageacct2025
 
@@ -16,34 +16,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '9.x'
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.x' # or '6.x' depending on your project
 
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create resource group and function app
-        run: |
-          az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_REGION
-          az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_REGION \
-            --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS || true
-          az functionapp create --resource-group $AZURE_RESOURCE_GROUP \
-            --consumption-plan-location $AZURE_REGION \
-            --runtime dotnet --functions-version 4 \
-            --name $AZURE_FUNCTIONAPP_NAME \
-            --storage-account $AZURE_STORAGE_ACCOUNT || true
+    - name: Create Azure resources if needed
+      run: |
+        az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_REGION
+        az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_REGION \
+          --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS || true
+        az functionapp create --resource-group $AZURE_RESOURCE_GROUP \
+          --consumption-plan-location $AZURE_REGION \
+          --runtime dotnet --functions-version 4 \
+          --name $AZURE_FUNCTIONAPP_NAME \
+          --storage-account $AZURE_STORAGE_ACCOUNT || true
 
-      - name: Build project
-        run: dotnet build
-
-      - name: Publish Function App
-        run: |
-          dotnet publish -c Release -o publish_output
-          func azure functionapp publish $AZURE_FUNCTIONAPP_NAME --dotnet
+    - name: Publish Function App
+      run: |
+        dotnet publish -c Release -o publish_output
+        func azure functionapp publish $AZURE_FUNCTIONAPP_NAME --dotnet

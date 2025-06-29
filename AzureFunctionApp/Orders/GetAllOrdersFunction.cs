@@ -29,7 +29,7 @@ public class GetAllOrdersFunction
     [Function("GetAllOrdersFunction")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
-        return new OkObjectResult("[{'name':'God is faithful all the time !!! 777'}]");
+        return new OkObjectResult("[{'name':'God is faithful all the time !!! 777888'}]");
         _logger.LogInformation("Processing request to retrieve all orders.");
 
         var cacheKey = "orders_all";

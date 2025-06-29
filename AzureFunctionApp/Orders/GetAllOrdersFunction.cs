@@ -27,8 +27,8 @@ public class GetAllOrdersFunction
         _cache = cache;
     }
 
-    //[Function("GetAllOrdersFunction")]
-    [FunctionName("GetAllOrdersFunction")]
+    [Function("GetAllOrdersFunction")]
+    //[FunctionName("GetAllOrdersFunction")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
         return new OkObjectResult("[{'name':'God is faithful all the time !!! 777888'}]");

@@ -22,7 +22,7 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.x' # Adjust if you're using .NET 6 or 7
+        dotnet-version: '8.x'
 
     - name: Login to Azure
       uses: azure/login@v1
@@ -40,7 +40,16 @@ jobs:
           --name $AZURE_FUNCTIONAPP_NAME \
           --storage-account $AZURE_STORAGE_ACCOUNT || true
 
-    - name: Publish Function App
+    - name: Publish and package Function App
       run: |
         dotnet publish -c Release -o publish_output
-        func azure functionapp publish $AZURE_FUNCTIONAPP_NAME --dotnet
+        cd publish_output
+        zip -r ../publish_output.zip .
+        cd ..
+
+    - name: Deploy Function App
+      run: |
+        az functionapp deployment source config-zip \
+          --resource-group $AZURE_RESOURCE_GROUP \
+          --name $AZURE_FUNCTIONAPP_NAME \
+          --src publish_output.zip

@@ -1,4 +1,4 @@
-﻿name: Build and Deploy .NET Azure Function App
+﻿name: Build and Deploy .NET Azure Function Apps
 
 on:
   push:

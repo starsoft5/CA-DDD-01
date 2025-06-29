@@ -1,4 +1,4 @@
-﻿name: Build and Deploy .NET Azure My Function Apollo
+﻿name: Build and Deploy .NET Azure My Function ApolloS
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: your-functionapp-name       # must be globally unique
-  AZURE_RESOURCE_GROUP: your-resource-group-name
+  AZURE_FUNCTIONAPP_NAME: your-functionapp-name02       # must be globally unique
+  AZURE_RESOURCE_GROUP: your-resource-group-name02
   AZURE_REGION: eastus                                # or your preferred region
-  AZURE_STORAGE_ACCOUNT: yourstorageacctname          # lowercase, globally unique
+  AZURE_STORAGE_ACCOUNT: yourstorageacctname02          # lowercase, globally unique
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,7 @@ jobs:
     - name: 🧰 Set up .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.x'  # Change if you're using .NET 7 or 6
+        dotnet-version: '9.x'  # Change if you're using .NET 7 or 6
 
     - name: 🔐 Login to Azure
       uses: azure/login@v1

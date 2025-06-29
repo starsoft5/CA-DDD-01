@@ -6,30 +6,30 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: ca-ddd-01-func
-  AZURE_RESOURCE_GROUP: ca-ddd-01-rg
-  AZURE_REGION: eastus
-  AZURE_STORAGE_ACCOUNT: caddd01storageacct
+  AZURE_FUNCTIONAPP_NAME: your-functionapp-name     # must be globally unique
+  AZURE_RESOURCE_GROUP: your-resource-group-name
+  AZURE_REGION: eastus                              # or westeurope, southeastasia, etc.
+  AZURE_STORAGE_ACCOUNT: yourstorageacctname        # must be globally unique, lowercase only
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source code
+    - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.x'
+        dotnet-version: '9.x'  # or '6.x' if you're using .NET 6
 
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create Azure resources
+    - name: Create Azure resources if not exists
       run: |
         az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_REGION
         az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_REGION \
@@ -40,14 +40,14 @@ jobs:
           --name $AZURE_FUNCTIONAPP_NAME \
           --storage-account $AZURE_STORAGE_ACCOUNT || true
 
-    - name: Publish and package Function App
+    - name: Build and package Function App
       run: |
         dotnet publish -c Release -o publish_output
         cd publish_output
         zip -r ../publish_output.zip .
         cd ..
 
-    - name: Deploy Function App
+    - name: Deploy to Azure Function App
       run: |
         az functionapp deployment source config-zip \
           --resource-group $AZURE_RESOURCE_GROUP \

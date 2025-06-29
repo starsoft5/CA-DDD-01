@@ -6,30 +6,30 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: azurefunctionappconvey
-  AZURE_RESOURCE_GROUP: convey-rg
+  AZURE_FUNCTIONAPP_NAME: ca-ddd-01-func
+  AZURE_RESOURCE_GROUP: ca-ddd-01-rg
   AZURE_REGION: eastus
-  AZURE_STORAGE_ACCOUNT: mystorageacct2025
+  AZURE_STORAGE_ACCOUNT: caddd01storageacct
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout source code
       uses: actions/checkout@v3
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '9.x' # or '6.x' depending on your project
+        dotnet-version: '8.x' # Adjust if you're using .NET 6 or 7
 
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create Azure resources if needed
+    - name: Create Azure resources
       run: |
         az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_REGION
         az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_REGION \

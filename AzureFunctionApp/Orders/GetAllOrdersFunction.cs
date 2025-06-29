@@ -28,8 +28,7 @@ public class GetAllOrdersFunction
     }
 
     [Function("GetAllOrdersFunction")]
-    //[FunctionName("GetAllOrdersFunction")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
+    public async Task<IActionResult> Run([Microsoft.Azure.Functions.Worker.HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
         return new OkObjectResult("[{'name':'God is faithful all the time !!! 777888'}]");
         _logger.LogInformation("Processing request to retrieve all orders.");

@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -26,7 +27,8 @@ public class GetAllOrdersFunction
         _cache = cache;
     }
 
-    [Function("GetAllOrdersFunction")]
+    //[Function("GetAllOrdersFunction")]
+    [FunctionName("GetAllOrdersFunction")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest req)
     {
         return new OkObjectResult("[{'name':'God is faithful all the time !!! 777888'}]");

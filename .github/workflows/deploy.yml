@@ -6,48 +6,50 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: your-functionapp-name     # must be globally unique
+  AZURE_FUNCTIONAPP_NAME: your-functionapp-name       # must be globally unique
   AZURE_RESOURCE_GROUP: your-resource-group-name
-  AZURE_REGION: eastus                              # or westeurope, southeastasia, etc.
-  AZURE_STORAGE_ACCOUNT: yourstorageacctname        # must be globally unique, lowercase only
+  AZURE_REGION: eastus                                # or your preferred region
+  AZURE_STORAGE_ACCOUNT: yourstorageacctname          # lowercase, globally unique
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 📥 Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up .NET
+    - name: 🧰 Set up .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.x'  # or  if you're using .NET 9
+        dotnet-version: '8.x'  # Change if you're using .NET 7 or 6
 
-    - name: Login to Azure
+    - name: 🔐 Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Create Azure resources if not exists
+    - name: ⚙️ Create Azure resources (if not exists)
       run: |
         az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_REGION
+        az storage account show --name $AZURE_STORAGE_ACCOUNT --resource-group $AZURE_RESOURCE_GROUP || \
         az storage account create --name $AZURE_STORAGE_ACCOUNT --location $AZURE_REGION \
-          --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS || true
+          --resource-group $AZURE_RESOURCE_GROUP --sku Standard_LRS
+        az functionapp show --name $AZURE_FUNCTIONAPP_NAME --resource-group $AZURE_RESOURCE_GROUP || \
         az functionapp create --resource-group $AZURE_RESOURCE_GROUP \
           --consumption-plan-location $AZURE_REGION \
           --runtime dotnet --functions-version 4 \
           --name $AZURE_FUNCTIONAPP_NAME \
-          --storage-account $AZURE_STORAGE_ACCOUNT || true
+          --storage-account $AZURE_STORAGE_ACCOUNT
 
-    - name: Build and package Function App
+    - name: 🛠 Build and publish Azure Functions project
       run: |
-        dotnet publish -c Release -o publish_output
+        dotnet publish AzureFunctionApp/AzureFunctionApp.csproj -c Release -o publish_output
         cd publish_output
         zip -r ../publish_output.zip .
         cd ..
 
-    - name: Deploy to Azure Function App
+    - name: 🚀 Deploy to Azure Function App
       run: |
         az functionapp deployment source config-zip \
           --resource-group $AZURE_RESOURCE_GROUP \

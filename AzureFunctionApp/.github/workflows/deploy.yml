@@ -16,9 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: ✅ CI Triggered
-      run: echo "GitHub Actions workflow has been triggered successfully."
-
     - name: Checkout code
       uses: actions/checkout@v3
 

@@ -10,7 +10,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     public AppDbContext CreateDbContext(string[] args)
     {
         // Assume appsettings.json is in the API project directory
-        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "API"); // <-- adjust if needed
+        var basePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "AzureFunctionApp"); // <-- adjust if needed
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(basePath)

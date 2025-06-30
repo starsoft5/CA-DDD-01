@@ -12,7 +12,13 @@ public class SimpleHelloFunction
         FunctionContext context)
     {
         var response = req.CreateResponse(HttpStatusCode.OK);
-        response.WriteString("Hello from Azure Function (dotnet-isolated)!");
+        response.WriteAsJsonAsync("Hello from Azure Function (dotnet-isolated)!");
+
+        // Add CORS headers
+        response.Headers.Add("Access-Control-Allow-Origin", "*");
+        response.Headers.Add("Access-Control-Allow-Methods", "GET, OPTIONS");
+        response.Headers.Add("Access-Control-Allow-Headers", "*");
+
         return response;
     }
 }

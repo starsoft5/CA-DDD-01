@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod()
                   .AllowAnyHeader();
         });
-}); */
+});  */
 
 
 // Fix: Provide a configuration action for MediatRServiceConfiguration instead of passing the assembly directly  

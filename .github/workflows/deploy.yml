@@ -1,4 +1,4 @@
-﻿name: Build and Deploy .NET Azure My Function ApolloS
+﻿name: Build and Deploy .NET Azure My Function Apollo Estrella
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
       - main
 
 env:
-  AZURE_FUNCTIONAPP_NAME: your-functionapp-name02       # must be globally unique
-  AZURE_RESOURCE_GROUP: your-resource-group-name02
+  AZURE_FUNCTIONAPP_NAME: azurefunctionapp       # must be globally unique
+  AZURE_RESOURCE_GROUP: convey08-rg2
   AZURE_REGION: eastus                                # or your preferred region
-  AZURE_STORAGE_ACCOUNT: yourstorageacctname02          # lowercase, globally unique
+  AZURE_STORAGE_ACCOUNT: azurefunctionappstorage          # lowercase, globally unique
 
 jobs:
   build-and-deploy:

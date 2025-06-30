@@ -31,7 +31,7 @@ public class GetAllOrdersFunction
     [Function("GetAllOrdersFunction")]
     public async Task<IActionResult> Run([Microsoft.Azure.Functions.Worker.HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
     {
-        return new OkObjectResult("[{'name':'Jesus Christ, our Saviour!'}]");
+        return new OkObjectResult("[{'name':'Jesus Christ, same yesterday, today and tomorrow'}]");
         _logger.LogInformation("Processing request to retrieve all orders.");
 
         var cacheKey = "orders_all";

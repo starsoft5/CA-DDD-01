@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250624094355_addMobileNoToOrderTbl")]
-    partial class addMobileNoToOrderTbl
+    [Migration("20250629204427_createOrderAndOrderItemTbl")]
+    partial class createOrderAndOrderItemTbl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

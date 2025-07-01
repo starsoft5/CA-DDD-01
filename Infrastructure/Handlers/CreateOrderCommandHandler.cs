@@ -24,7 +24,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
             Items = dto.Items.Select(i => new OrderItem
             {
                 Product = i.Product,
-                Quantity = i.Quantity
+                Quantity = i.Quantity,
+                Price = i.Price
             }).ToList()
         };
 
@@ -40,7 +41,8 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
             {
                 Id = i.Id,
                 Product = i.Product,
-                Quantity = i.Quantity
+                Quantity = i.Quantity,
+                Price = i.Price
             }).ToList()
         };
     }

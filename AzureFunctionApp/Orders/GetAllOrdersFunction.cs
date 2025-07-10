@@ -19,8 +19,6 @@ public class GetAllOrdersFunction
     private readonly IMediator _mediator;
     private readonly IDistributedCache _cache;
 
-
-
     public GetAllOrdersFunction(ILogger<GetAllOrdersFunction> logger, IMediator mediator, IDistributedCache cache)
     {
         _logger = logger;

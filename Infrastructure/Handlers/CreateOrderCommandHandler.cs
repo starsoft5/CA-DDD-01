@@ -3,6 +3,7 @@ using Application.DTOs;
 using Domain.Entities;
 using Infrastructure.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, OrderReadDto>
 {
@@ -21,11 +22,20 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
         {
             CustomerName = dto.CustomerName,
             OrderDate = dto.OrderDate,
-            Items = dto.Items.Select(i => new OrderItem
+            Items = dto.Items.Select(i =>
             {
-                Product = i.Product,
-                Quantity = i.Quantity,
-                Price = i.Price
+                var product = _context.Products.FirstOrDefault(p => p.Id == i.Product.Id);
+                if (product == null)
+                {
+                    throw new InvalidOperationException($"Product with ID {i.Product.Id} not found.");
+                }
+
+                return new OrderItem
+                {
+                    Product = product,
+                    Quantity = i.Quantity,
+                    Price = i.Price
+                };
             }).ToList()
         };
 

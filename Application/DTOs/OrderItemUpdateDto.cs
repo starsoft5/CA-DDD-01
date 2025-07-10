@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Application.DTOs
     public class OrderItemUpdateDto
     {
         public int Id { get; set; } // needed to track item updates
-        public string Product { get; set; }
+        public Product Product { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
     }

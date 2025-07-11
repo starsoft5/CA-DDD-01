@@ -51,6 +51,5 @@
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
-  <UsingTask TaskName="GenerateFunctionsJson"
-               AssemblyFile="$(NuGetPackageRoot)microsoft.azure.functions.worker.sdk\2.0.2\tools\netcoreapp3.0\Microsoft.Azure.Functions.Worker.Sdk.dll" />
+  <UsingTask TaskName="GenerateFunctionsJson" AssemblyFile="$(NuGetPackageRoot)microsoft.azure.functions.worker.sdk\2.0.2\tools\netcoreapp3.0\Microsoft.Azure.Functions.Worker.Sdk.dll" />
 </Project>

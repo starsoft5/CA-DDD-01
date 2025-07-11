@@ -24,7 +24,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Ord
             OrderDate = dto.OrderDate,
             Items = dto.Items.Select(i =>
             {
-                var product = _context.Products.FirstOrDefault(p => p.Id == i.Product.Id);
+                var product = _context.Products.FirstOrDefault(p => p.Id == i.Id);
                 if (product == null)
                 {
                     throw new InvalidOperationException($"Product with ID {i.Product.Id} not found.");

@@ -9,6 +9,7 @@ namespace Application.DTOs
 {
     public class ProductDTO
     {
+        public int Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; } = "";
         [MaxLength(500)]

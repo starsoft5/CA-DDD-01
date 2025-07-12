@@ -1,10 +1,10 @@
-﻿using Application.Interfaces;
+﻿//using Application.Interfaces;
 using Application.Interfaces.Users;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Services.User;
 
 public class UserService : IUserService
 {
@@ -40,8 +40,7 @@ public class UserService : IUserService
             _context.SaveChanges();
         }
     }
-
-    public Domain.Entities.User? GetByEmail(string email)
+    public Domain.Entities.User GetByEmail(string email)
     {
         return _context.Users.FirstOrDefault(u => u.Email == email);
     }

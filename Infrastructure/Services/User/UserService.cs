@@ -40,7 +40,7 @@ public class UserService : IUserService
             _context.SaveChanges();
         }
     }
-    public Domain.Entities.User GetByEmail(string email)
+    public Domain.Entities.User? GetByEmail(string email)
     {
         return _context.Users.FirstOrDefault(u => u.Email == email);
     }

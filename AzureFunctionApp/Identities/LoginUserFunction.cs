@@ -2,7 +2,6 @@
 using Application.Commands;
 using Application.DTOs;
 using Application.DTOs.Users;
-using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +9,11 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Application.Interfaces.Users;
+using Infrastructure.Security;
+using Domain.Entities;
+using Microsoft.Azure.Functions.Worker.Http;
+
 
 namespace AzureFunctionApp.Identities;
 
@@ -18,14 +22,16 @@ public class LoginUserFunction
     private readonly ILogger<LoginUserFunction> _logger;
     private readonly IMediator _mediator;
     private readonly IDistributedCache _cache;
+    private readonly IUserService _userService;
 
 
 
-    public LoginUserFunction(ILogger<LoginUserFunction> logger, IMediator mediator, IDistributedCache cache)
+    public LoginUserFunction(ILogger<LoginUserFunction> logger, IMediator mediator, IDistributedCache cache, IUserService userService)
     {
         _logger = logger;
         _mediator = mediator;
         _cache = cache;
+        _userService = userService;
     }
 
     [Function("LoginUserFunction")]
@@ -40,6 +46,22 @@ public class LoginUserFunction
             return new BadRequestObjectResult("Invalid request body");
         }
 
+        User? user = _userService.GetByEmail(command.Email);
+         
+
+        if (user?.Email == null)
+        {
+            _logger.LogInformation("Email does not exists.");
+            return new BadRequestObjectResult("Invalid request body");
+        }
+
+        var passwordHasher = new PasswordHasher();
+        var isValid = passwordHasher.Verify(command.Password, user.PasswordHash, user.Salt);
+        if (!isValid)
+        {
+            return new UnauthorizedObjectResult("Invalid login.");
+        }
+       
         var result = await _mediator.Send(command);
 
         //await _cache.RemoveAsync(cacheKey);

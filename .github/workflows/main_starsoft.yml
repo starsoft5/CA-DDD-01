@@ -41,5 +41,5 @@ jobs:
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
-          app-name: starsoft   # <--- your function app name
+          app-name: mymainazurefunction   # <--- your function app name
           package: './output'

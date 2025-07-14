@@ -75,6 +75,7 @@ var host = new HostBuilder()
                     .AddSource("Microsoft.Azure.Functions.Worker")
                     .AddConsoleExporter();
             });
+
       /*  services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(AssemblyReference).Assembly));
 

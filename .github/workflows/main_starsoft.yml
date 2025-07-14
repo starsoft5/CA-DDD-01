@@ -1,29 +1,35 @@
-name: Deploy to Azure Function App
+name: Deploy Azure Function App
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' 
+  DOTNET_VERSION: '9.0.x'
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Build project
+      - name: Restore and build
         run: |
-          dotnet build --configuration Release
-          dotnet publish --configuration Release --output ./output
+          dotnet build --configuration Release --output ./output
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -35,5 +41,5 @@ jobs:
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
-          app-name: 'starsoft'
+          app-name: starsoft   # <--- your function app name
           package: './output'
